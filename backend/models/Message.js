@@ -10,6 +10,7 @@ const messageSchema = new mongoose.Schema({
     required: true,
   },
   type: { type: String, enum: ["issue", "idea"], required: true },
+  status:{type: String, enum: ["pending", "resolved"],default:"pending"},
   filePath: [{ type: String }],
 });
 const Message = mongoose.model("Message", messageSchema);

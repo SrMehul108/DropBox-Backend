@@ -7,7 +7,7 @@ const {
   verifyAdmin,
   verifyUser,
 } = require("../middleware/authMiddleware");
-const { sendMessages, getMessages } = require("../controllers/messageController");
+const { sendMessages, getMessages, updateStatusMessage } = require("../controllers/messageController");
 const Config = require("../config/index");
 
 cloudinary.config({
@@ -77,5 +77,6 @@ router.post(
 );
 
 router.get("/getMessages", authMiddleware, verifyAdmin, getMessages);
+router.put("/updateMessages/:id", authMiddleware, verifyAdmin, updateStatusMessage);
 
 module.exports = router;

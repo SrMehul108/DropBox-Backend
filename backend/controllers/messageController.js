@@ -52,3 +52,14 @@ exports.getMessages = async (req, res) => {
   }
 };
 
+exports.updateStatusMessage=async(req,res)=>{
+  try {
+    const id=req.params.id;
+    const messages = await Message.findById(id);
+    messages.status="resolved";
+    messages.save()
+    res.status(200).json({ message: "Message status updated successfully",messages });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

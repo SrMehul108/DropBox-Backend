@@ -25,11 +25,30 @@ exports.sendMessages = async (req, res) => {
 
 exports.getMessages = async (req, res) => {
   try {
-    const messages = await Message.find();
+    let { page = 1, limit = 10, title } = req.query;
 
+    page = parseInt(page);
+    limit = parseInt(limit);
 
-    res.status(200).json({ message: "Message Get successfully",messages });
+    let filter = {};
+    if (title) filter.title = { $regex: title, $options: "i" }; 
+
+    const messages = await Message.find(filter)
+      .sort({ createdAt: -1 }) 
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const totalMessages = await Message.countDocuments(filter);
+
+    res.status(200).json({
+      message: "Messages retrieved successfully",
+      totalPages: Math.ceil(totalMessages / limit),
+      currentPage: page,
+      totalMessages,
+      messages,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
